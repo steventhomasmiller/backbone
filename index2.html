@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+<head>
+  <title>Hello, Backbone</title>
+</head>
+  <body>
+    <script type="text/html" id="hello-template">
+  <div>
+    Hello, <%= name %>!
+  </div>
+</script>
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.8.0/lodash.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.2.0/backbone-min.js"></script>
+
+    <script>
+
+    var CalculatorModel = Backbone.Model.extend({
+      defaults: {
+        result: 0,
+        input: 0
+      },
+      doMath: function (operation) {
+        //get the current value
+        var value = this.get("result");
+        //get the input value
+        var input = this.get("input");
+        //add, subtract, multiply or divide
+        if (operation == "add") {
+          var output = value + input;
+        }
+        //set the result
+        this.set("result", output);
+      }
+    });
+
+    var calc = new CalculatorModel(); //constructor
+
+    calc.on("change:result", function() {
+      console.log(calc.toJSON());
+    });
+
+    </script>
+
+
+  </body>
+</html>
