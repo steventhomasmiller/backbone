@@ -4,10 +4,13 @@
   <title>Hello, Backbone</title>
 </head>
   <body>
-    <script type="text/html" id="hello-template">
-  <div>
-    Hello, <%= name %>!
-  </div>
+
+    <div class="calculator"></div>
+
+    <script type="text/html" id="calc-template">
+      <div class="output"> <%= result %> </div>
+      <input class="input">
+      <button class="opertation" data-op="add">+</button>
 </script>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -18,7 +21,7 @@
 
     var CalculatorModel = Backbone.Model.extend({
       defaults: {
-        result: 0,
+        result: 100,
         input: 0
       },
       doMath: function (operation) {
@@ -40,6 +43,26 @@
     calc.on("change:result", function() {
       console.log(calc.toJSON());
     });
+
+    //constructor functions always capitalized
+
+    var CalculatorView = Backbone.View.extend({
+      el: ".calculator",
+      initialize: function () {
+        this.listenTo(this.model, "change:result", this.render)
+      },
+      template: _.template($("#calc-template").html()),
+      render: function() {
+        var model = this.model.toJSON();
+        var html = this.template(model);
+        this.$el.html(html);
+      }
+    });
+
+    var view = new CalculatorView({
+      model: calc
+    });
+    view.render();
 
     </script>
 
