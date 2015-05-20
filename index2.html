@@ -10,7 +10,8 @@
     <script type="text/html" id="calc-template">
       <div class="output"> <%= result %> </div>
       <input class="input">
-      <button class="opertation" data-op="add">+</button>
+      <button class="operation" data-op="add">+</button>
+      <button class="operation" data-op="subtract">-</button>
 </script>
 
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
@@ -21,7 +22,7 @@
 
     var CalculatorModel = Backbone.Model.extend({
       defaults: {
-        result: 100,
+        result: 0,
         input: 0
       },
       doMath: function (operation) {
@@ -51,11 +52,23 @@
       initialize: function () {
         this.listenTo(this.model, "change:result", this.render)
       },
+      events: {
+        "keyup .input": "updateInput",
+        "click .operation": "runOperation"
+      },
       template: _.template($("#calc-template").html()),
       render: function() {
         var model = this.model.toJSON();
         var html = this.template(model);
         this.$el.html(html);
+      },
+      updateInput: function(e) {
+        var value = e.target.value;
+        this.model.set("input", Number(value));
+      },
+      runOperation: function(e) {
+        var op = $(e.target).data("op");
+        this.model.doMath(op);
       }
     });
 
